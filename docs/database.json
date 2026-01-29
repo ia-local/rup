@@ -1,0 +1,227 @@
+{
+    "index": {
+        "page_title": "Réforme PRCR | Cadre Légal",
+        "sections": [
+            {
+                "id": "intro",
+                "title": "Vision",
+                "type": "hero",
+                "heading": "Projet de Réforme PRCR",
+                "content": "Programme du Revenu Citoyen et de la Régulation. Une refonte du Code du Travail pour intégrer l'économie circulaire, la monétisation des compétences et le Revenu Universel Progressif.",
+                "citation": null
+            },
+            {
+                "id": "objectifs",
+                "title": "Objectifs",
+                "type": "card",
+                "heading": "Finalités de la Réforme",
+                "content": "<ul><li><strong>Valorisation :</strong> Améliorer la reconnaissance financière des compétences réelles.</li><li><strong>Formation :</strong> Favoriser la professionnalisation continue via le CVNU.</li><li><strong>Innovation :</strong> Encourager la création d'emplois qualifiés et l'économie circulaire.</li></ul>",
+                "citation": null
+            },
+            {
+                "id": "code_travail_def",
+                "title": "Code du Travail",
+                "type": "card",
+                "heading": "Redéfinition du Travail",
+                "content": "L'article L3121-1 est modifié pour inclure la monétisation des compétences basée sur le CVNU comme temps de travail effectif. L'article L3222-1 redéfinit la durée légale en intégrant les cycles numériques.",
+                "citation": {
+                    "text": "\"Définition du travail pour inclure la monétisation des compétences basée sur le CVNU.\"",
+                    "source": "— Art. L3121-1 & L3222-1 (Modifiés)"
+                }
+            },
+            {
+                "id": "smart_contracts",
+                "title": "Sécurisation (Smart Contracts)",
+                "type": "card",
+                "heading": "Transparence Transactionnelle",
+                "content": "Introduction de l'Article L4331-1 pour légaliser l'usage des Smart Contracts. Ils garantissent la sécurisation, la traçabilité et la transparence des transactions de monétisation liées au CV numérique.",
+                "citation": {
+                    "text": "\"Smart contracts pour la sécurisation et la transparence des transactions.\"",
+                    "source": "— Art. L4331-1 (Nouveau)"
+                }
+            },
+            {
+                "id": "fiscalite_cgi",
+                "title": "Fiscalité & TVA",
+                "type": "card",
+                "heading": "Financement par la TVA",
+                "content": "L'Article L4334-1 utilise la TVA pour financer la formation et l'emploi. En lien avec l'Article 256 du CGI, une fraction de la taxe existante est réaffectée vers le dispositif, avec un suivi rigoureux imposé par l'Article L4333-1.",
+                "citation": {
+                    "text": "\"Réaffecter une fraction de cette taxe existante pour financer les dispositifs de formation.\"",
+                    "source": "— CGI Art. 256 & Code du Travail L4334-1"
+                }
+            },
+            {
+                "id": "constitution",
+                "title": "Socle Constitutionnel",
+                "type": "card",
+                "heading": "Garantie des Droits",
+                "content": "Le système respecte la séparation stricte des pouvoirs entre le noyau immuable (Législatif) et l'exécution (Exécutif), garantissant la propriété souveraine des actifs numériques.",
+                "citation": {
+                    "text": "\"Toute société dans laquelle la garantie des droits n'est pas assurée [...] n'a point de Constitution.\"",
+                    "source": "— DDHC Art. 16 & Code Civil Art. 544"
+                }
+            }
+        ]
+    },
+    "economie": {
+        "page_title": "Réforme PRCR | Économie Circulaire",
+        "sections": [
+            {
+                "id": "eco_intro",
+                "title": "Principe Fiscal",
+                "type": "hero",
+                "heading": "Fiscalité Algorithmique",
+                "content": "Un système hybride : Taxer l'automatisation pour financer l'humain, subventionner l'efficacité pour protéger les ressources.",
+                "citation": null
+            },
+            {
+                "id": "taxe_ia",
+                "title": "La Taxe IA (6.8%)",
+                "type": "card",
+                "heading": "Financement du Fonds Commun",
+                "content": "<ul><li><strong>Mécanisme :</strong> Chaque interaction numérique génère une valeur brute. Le système prélève automatiquement <strong>6.8%</strong> (TAXE_IA_RATE) pour alimenter le RUP.</li><li><strong>Finalité :</strong> Transformer la plus-value machine en revenu citoyen.</li></ul>",
+                "citation": {
+                    "text": "\"Prélèvement automatique sur les gains pour alimenter le fonds RUP.\"",
+                    "source": "— circular_tax_engine.js (Constante TAXE_IA_RATE)"
+                }
+            },
+            {
+                "id": "tcn_subvention",
+                "title": "Subvention TCN",
+                "type": "chart_section", 
+                "heading": "Taxe Circulaire Négative (Subvention)",
+                "content": "Si votre ratio d'efficacité (UTMi / Coût) dépasse <strong>1000</strong>, la fiscalité s'inverse. Au lieu d'être taxé, vous recevez une <strong>subvention de 10%</strong>.",
+                "chartConfig": {
+                    "type": "bar",
+                    "data": {
+                        "labels": ["Modèle Standard", "Modèle Circulaire (TCN)"],
+                        "datasets": [{
+                            "label": "Valeur Nette Citoyen (€)",
+                            "data": [93.2, 110],
+                            "backgroundColor": ["#000091", "#27AE60"],
+                            "borderWidth": 1
+                        }]
+                    },
+                    "options": {
+                        "responsive": true,
+                        "plugins": {
+                            "legend": { "display": false },
+                            "title": { "display": true, "text": "Impact de la Circularité sur 100 UTMi de production" }
+                        },
+                        "scales": {
+                            "y": { "beginAtZero": true }
+                        }
+                    }
+                },
+                "citation": {
+                    "text": "\"Plus vous êtes efficace et économe en ressources, plus le système vous rémunère.\"",
+                    "source": "— circular_tax_engine.js (Seuil: 1000 | Taux: +10%)"
+                }
+            },
+            {
+                "id": "valeur_utmi",
+                "title": "Valeur UTMi",
+                "type": "card",
+                "heading": "Étalon de Valeur",
+                "content": "<ul><li><strong>Unité :</strong> UTMi (Unité Temporelle Monétisable).</li><li><strong>Parité :</strong> 1 UTMi = 1 EUR.</li><li><strong>Transparence :</strong> Conversion directe de l'activité cognitive en pouvoir d'achat sans spéculation.</li></ul>",
+                "citation": {
+                    "text": "\"Transparence totale sur la conversion de l'activité numérique en euros.\"",
+                    "source": "— utms_calculator.js"
+                }
+            }
+        ]
+    },
+    "cvnu": {
+        "page_title": "Réforme PRCR | L'Actif Humain",
+        "sections": [
+            {
+                "id": "cvnu_hero",
+                "title": "Smart Contract CV",
+                "type": "hero",
+                "heading": "Votre Carrière est un Actif",
+                "content": "Le CVNU n'est pas un document PDF, c'est un Smart Contract évolutif qui certifie vos compétences et détermine votre plafond de revenu garanti.",
+                "citation": null
+            },
+            {
+                "id": "niveaux",
+                "title": "Niveaux & Compétences",
+                "type": "card",
+                "heading": "Algorithme de Progression",
+                "content": "Le système calcule votre niveau (1 à 10) en temps réel basé sur votre score cognitif.<br><br><strong>Formule :</strong> <code>Level = Math.max(1, Math.min(10, Math.floor(Score / 500)))</code>. Chaque niveau débloque un nouveau palier de RUP garanti.",
+                "citation": {
+                    "text": "\"Structure pour représenter les compétences d'un citoyen : Level, Experience, Certified.\"",
+                    "source": "— CVNU.sol [cite: 1] [cite_start]& CORE_SYSTEM_CVNU.js [cite: 2]"
+                }
+            },
+            {
+                "id": "identite",
+                "title": "Identité Souveraine",
+                "type": "card",
+                "heading": "Sécurisation Cryptographique",
+                "content": "Pour garantir l'anonymat bancaire, votre RIB n'est jamais stocké en clair. Il est transformé en empreinte numérique unique via un hachage SHA-256 avant d'être inscrit dans le contrat.",
+                "citation": {
+                    "text": "\"Nous stockons un identifiant haché qui lie un CVNU à une base de données hors chaîne.\"",
+                    "source": "— TVA_RIB_Synchronizer.sol [cite: 31] & CORE_SYSTEM_CVNU.js"
+                }
+            },
+            {
+                "id": "axes_cognitifs",
+                "title": "Axes Cognitifs",
+                "type": "card",
+                "heading": "Valorisation des Soft Skills",
+                "content": "L'algorithme ne valorise pas que le code. Il détecte et rémunère les axes cognitifs :<ul><li>🧠 <strong>Stratégie</strong> (Planification)</li><li>🔍 <strong>Analyse</strong> (Décomposition)</li><li>🎨 <strong>Imagination</strong> (Création)</li></ul>",
+                "citation": {
+                    "text": "\"Utmi par axe cognitif : Concentration, Adaptation, Imagination, Stratégie...\"",
+                    "source": "— utms_calculator.js (Objet COGNITIVE_AXES)"
+                }
+            }
+        ]
+    },
+    "rup": {
+        "page_title": "Réforme PRCR | Revenu Universel",
+        "sections": [
+            {
+                "id": "rup_hero",
+                "title": "Le Contrat Social",
+                "type": "hero",
+                "heading": "Revenu Universel Progressif",
+                "content": "Un filet de sécurité dynamique qui ne désincite pas au travail, mais sécurise la prise de risque et l'innovation.",
+                "citation": null
+            },
+            {
+                "id": "grille_progression",
+                "title": "Grille de Progression",
+                "type": "card",
+                "heading": "Paliers de Revenu Garanti",
+                "content": "<table style='width:100%; border-collapse: collapse; margin-top:10px;'><thead><tr style='border-bottom:2px solid #000091; text-align:left;'><th>Niveau</th><th>Statut</th><th>Montant Garanti</th></tr></thead><tbody><tr><td>Lvl 1</td><td>Seuil Survie</td><td><strong>750 €</strong></td></tr><tr><td>Lvl 2</td><td>Seuil Pauvreté</td><td><strong>1200 €</strong></td></tr><tr><td>Lvl 3</td><td>Autonomie</td><td><strong>1800 €</strong></td></tr><tr><td>Lvl 10</td><td>Excellence</td><td><strong>7500 €</strong></td></tr></tbody></table>",
+                "citation": {
+                    "text": "\"Progression jusqu'au niveau 10 : Plafond de ressources.\"",
+                    "source": "— rup_progress.js (Constante RUP_LEVELS_CONFIG)"
+                }
+            },
+            {
+                "id": "safety_lock",
+                "title": "Verrou de Sécurité",
+                "type": "card",
+                "heading": "Le Principe de Cliquet",
+                "content": "Une fois un niveau atteint par la compétence, il est acquis à vie. Le système empêche algorithmiquement la régression.<br><br><strong>Logique :</strong> <code>if (points >= min && lvl > newLevel)</code> — Le niveau ne peut que monter.",
+                "citation": {
+                    "text": "\"Applique le Safety Lock : le niveau ne peut que monter.\"",
+                    "source": "— rup_progress.js"
+                }
+            },
+            {
+                "id": "distribution",
+                "title": "Distribution",
+                "type": "card",
+                "heading": "Cycle de 28 Jours",
+                "content": "L'argent arrive sur le compte sans intervention humaine. Le Smart Contract <code>distributeFunds</code> s'exécute automatiquement à la fin de chaque cycle économique (28 jours), garantissant la neutralité du versement.",
+                "citation": {
+                    "text": "\"Déclenchement du paiement en crypto-monnaie ou monnaie fiduciaire numérisée chaque 28 jours.\"",
+                    "source": "— rup_manager.js & TVA_RIB_Synchronizer.sol"
+                }
+            }
+        ]
+    }
+}

@@ -1,0 +1,268 @@
+:root {
+    --gov-blue: #000091; 
+    --gov-red: #E1000F;
+    --gov-light: #F5F7FA;
+    --gov-white: #FFFFFF;
+    --gov-text: #1E1E1E;
+    --gov-accent: #27AE60; 
+    --gov-border: #E5E5E5;
+    --shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background-color: var(--gov-light);
+    color: var(--gov-text);
+    font-family: 'Inter', -apple-system, sans-serif;
+    line-height: 1.6;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+/* --- HEADER --- */
+.gov-header {
+    background: var(--gov-white);
+    padding: 1rem 5%;
+    border-bottom: 3px solid var(--gov-blue);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: var(--shadow);
+}
+
+.gov-logo {
+    font-weight: 900;
+    font-size: 1rem;
+    color: var(--gov-blue);
+    line-height: 1.1;
+    border-left: 3px solid var(--gov-blue);
+    padding-left: 10px;
+    text-transform: uppercase;
+}
+
+.gov-nav a {
+    text-decoration: none;
+    color: var(--gov-text);
+    font-weight: 500;
+    margin-left: 2rem;
+    font-size: 0.9rem;
+    padding: 5px 0;
+}
+
+.gov-nav a.active, .gov-nav a:hover {
+    color: var(--gov-blue);
+    border-bottom: 2px solid var(--gov-blue);
+}
+
+/* --- DASHBOARD LAYOUT (LE CORRECTIF EST ICI) --- */
+.dashboard-container {
+    max-width: 1200px;
+    margin: 2rem auto;
+    padding: 0 2rem;
+    display: flex; /* Active l'alignement côte à côte */
+    gap: 3rem;     /* Espace entre le menu et le contenu */
+    align-items: flex-start; /* Aligne en haut */
+    flex: 1;
+}
+
+/* Colonne de Gauche (Menu) */
+.left-aside {
+    flex: 0 0 260px; /* Largeur fixe de 260px */
+    background: white;
+    border: 1px solid var(--gov-border);
+    border-radius: 4px;
+    padding: 1rem 0;
+    position: sticky; /* Le menu reste visible au scroll */
+    top: 100px;
+}
+
+/* Boutons du menu latéral */
+.nav-btn {
+    display: block;
+    width: 100%;
+    padding: 1rem 1.5rem;
+    background: none;
+    border: none;
+    text-align: left;
+    font-family: inherit;
+    font-size: 0.95rem;
+    color: #555;
+    cursor: pointer;
+    border-left: 4px solid transparent;
+    transition: all 0.2s;
+}
+
+.nav-btn:hover {
+    background-color: #f4f6f9;
+    color: var(--gov-blue);
+}
+
+.nav-btn.active {
+    background-color: #f0f3ff;
+    color: var(--gov-blue);
+    border-left-color: var(--gov-blue); /* Barre bleue active à gauche */
+    font-weight: 600;
+}
+
+/* Colonne de Droite (Contenu) */
+.main-viewer {
+    flex: 1; /* Prend tout l'espace restant */
+    min-width: 0; /* Évite les débordements */
+}
+
+/* Gestion de l'affichage dynamique (Cacher/Montrer) */
+.content-section {
+    display: none; /* Caché par défaut */
+    animation: fadeIn 0.4s ease;
+}
+
+.content-section.active {
+    display: block; /* Visible quand actif */
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* --- ANCIEN STYLE CONTENT (Pour compatibilité) --- */
+.hero-section {
+    margin-bottom: 3rem;
+    border-bottom: 1px solid var(--gov-border);
+    padding-bottom: 2rem;
+}
+
+.hero-section h1 {
+    font-size: 2.5rem;
+    color: var(--gov-blue);
+    margin-bottom: 1rem;
+    line-height: 1.2;
+}
+
+.tagline {
+    font-size: 1.2rem;
+    color: #666;
+}
+
+.info-card {
+    background: var(--gov-white);
+    padding: 2rem;
+    border-radius: 4px;
+    border: 1px solid var(--gov-border);
+    margin-bottom: 2rem;
+    box-shadow: 2px 2px 0px rgba(0,0,0,0.05);
+}
+
+.info-card h2 {
+    color: var(--gov-text);
+    margin-bottom: 1rem;
+    font-size: 1.5rem;
+}
+
+.law-quote {
+    border-left: 4px solid var(--gov-blue);
+    padding: 1rem 1.5rem;
+    background: #f0f3f9;
+    margin: 1.5rem 0 0 0;
+    font-style: italic;
+    color: #333;
+}
+
+.law-quote cite {
+    display: block;
+    margin-top: 0.5rem;
+    font-size: 0.85rem;
+    color: var(--gov-blue);
+    font-weight: bold;
+    font-style: normal;
+}
+
+/* --- LISTES DANS LES CARTES (JSON INJECTED) --- */
+.card-body ul {
+    list-style: none;
+    padding-left: 0;
+    margin-top: 1.5rem;
+}
+
+.card-body li {
+    background: #fff;
+    border-left: 4px solid var(--gov-accent); /* Liseré vert */
+    padding: 12px 15px;
+    margin-bottom: 12px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.04);
+    border: 1px solid #eee;
+    border-left-width: 4px; /* Force le liseré */
+    border-radius: 0 4px 4px 0;
+}
+
+.card-body li strong {
+    color: var(--gov-blue);
+    display: block;
+    margin-bottom: 4px;
+}
+
+/* --- FOOTER & BUTTONS --- */
+.cta-gov {
+    display: inline-block;
+    background: var(--gov-blue);
+    color: white;
+    padding: 1rem 2.5rem;
+    text-decoration: none;
+    font-weight: bold;
+    border-radius: 2px;
+    transition: background 0.3s;
+}
+
+.cta-gov:hover {
+    background: #000063;
+}
+
+.floating-btn {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    background: var(--gov-blue);
+    color: white;
+    padding: 0.8rem 1.2rem;
+    border-radius: 50px;
+    cursor: pointer;
+    box-shadow: var(--shadow);
+    z-index: 200;
+}
+
+.hud-footer {
+    text-align: center;
+    padding: 2rem 0;
+    font-size: 0.8rem;
+    color: #888;
+    background: var(--gov-white);
+    border-top: 1px solid var(--gov-border);
+    margin-top: auto;
+}
+
+/* Responsive Mobile */
+@media (max-width: 768px) {
+    .dashboard-container {
+        flex-direction: column;
+    }
+    
+    .left-aside {
+        width: 100%;
+        position: relative;
+        top: 0;
+        margin-bottom: 2rem;
+    }
+
+    .gov-header { flex-direction: column; text-align: center; gap: 1rem; }
+    .gov-nav a { margin: 0 10px; }
+    .hero-section h1 { font-size: 1.8rem; }
+}
