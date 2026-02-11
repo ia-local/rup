@@ -9,7 +9,7 @@ const Groq = require('groq-sdk');
 const { CVNU_SYSTEM, KERNEL } = require('./docs/CORE_SYSTEM_CVNU.js');
 
 // Initialisation des instances
-const bot = new Telegraf(process.env.TELEGRAM_TOKEN, {
+const bot = new Telegraf('7387310603:AAEdSZ8DUY5O7Z0r9de_QkQlw9_aqYSQVbU', {
     telegram: {
       webhookReply: true,
     },
