@@ -4,7 +4,7 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import Groq from 'groq-sdk';
 import dotenv from 'dotenv';
-
+import telegram from './telegramRouter.cjs';
 // --- IMPORTATION DU NOYAU ET DES MOTEURS ÉCONOMIQUES ---
 import { circularTaxEngine } from './docs/circular_tax_engine.js';
 import CORE_SYSTEM_CVNU from './docs/CORE_SYSTEM_CVNU.js';
