@@ -5,12 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PRCR | Présentation Officielle du Revenu Citoyen</title>
     <link rel="stylesheet" href="style.css">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script> <style>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
         :root {
-            --gov-blue: #000091; /* */
-            --gov-accent: #27AE60; /* */
+            --gov-blue: #000091;
+            --gov-accent: #27AE60;
         }
-        body { overflow: hidden; display: flex; flex-direction: column; height: 100vh; background-color: #f5f7fa; }
+        body { overflow: hidden; display: flex; flex-direction: column; height: 100vh; background-color: #f5f7fa; font-family: 'Marianne', Arial, sans-serif; }
         .slider-wrapper { flex: 1; position: relative; display: flex; align-items: center; justify-content: center; padding: 20px; }
         .slide { display: none; width: 100%; max-width: 1150px; padding: 2.5rem; background: white; border-top: 6px solid var(--gov-blue); box-shadow: 0 10px 30px rgba(0,0,0,0.1); animation: slideIn 0.5s ease-out; }
         .slide.active { display: grid; grid-template-columns: 1fr 1.2fr; gap: 40px; }
@@ -18,14 +19,15 @@
         .step-number { font-weight: 900; font-size: 1.1rem; color: var(--gov-blue); text-transform: uppercase; margin-bottom: 0.5rem; display: block; }
         .slide h1 { font-size: 2.2rem; margin-bottom: 1rem; color: var(--gov-blue); }
         
-        /* Conteneur pour Chart.js */
         .chart-container { position: relative; height: 350px; width: 100%; background: #ffffff; padding: 10px; border-radius: 4px; border: 1px solid #eee; }
 
         .sub-sections { list-style: none; padding: 0; margin-top: 15px; }
-        .sub-sections li { background: #f0f3ff; margin-bottom: 8px; padding: 10px; border-left: 4px solid var(--gov-accent); font-size: 0.9rem; font-weight: 500; }
+        .sub-sections li { background: #f0f3ff; margin-bottom: 8px; padding: 10px; border-left: 4px solid var(--gov-accent); font-size: 0.9rem; font-weight: 500; animation: fadeIn 0.3s ease-in; }
+        
         .controls { padding: 1.5rem; background: white; border-top: 1px solid #ddd; display: flex; justify-content: center; gap: 20px; }
         
         @keyframes slideIn { from { opacity: 0; transform: translateX(30px); } to { opacity: 1; transform: translateX(0); } }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
     </style>
 </head>
 <body>
@@ -36,41 +38,32 @@
     </header>
 
     <div class="slider-wrapper">
-        <div class="slide active" id="s1">
+        <div class="slide active" id="slide1">
             <div class="info">
                 <span class="step-number">Étape 01 : Mining Cognitif</span>
                 <h1>Axes de Valorisation</h1>
                 <p>Analyse sémantique des interactions pour définir le profil de compétence universel.</p>
-                <ul class="sub-sections">
-                    <li>✅ Analyse NLP des Plis Cognitifs</li>
-                    <li>✅ Attribution UTMi (1 UTMi = 1 EUR)</li>
-                </ul>
+                <ul class="sub-sections" id="list-step1"></ul>
             </div>
             <div class="chart-container"><canvas id="chartSkills"></canvas></div>
         </div>
 
-        <div class="slide" id="s2">
+        <div class="slide" id="slide2">
             <div class="info">
                 <span class="step-number">Étape 02 : Cartographie Fiscale</span>
                 <h1>Affectation Taxe IA</h1>
-                <p>Redistribution circulaire des recettes de TVA vers le fonds RUP.</p>
-                <ul class="sub-sections">
-                    <li>✅ Collecte TVA automatisée (20%)</li>
-                    <li>✅ Prélèvement Taxe IA (6.8%)</li>
-                </ul>
+                <p>Liaison souveraine via Hash SHA-256 et moteur de redistribution circulaire.</p>
+                <ul class="sub-sections" id="list-step2"></ul>
             </div>
             <div class="chart-container"><canvas id="chartFiscal"></canvas></div>
         </div>
 
-        <div class="slide" id="s3">
+        <div class="slide" id="slide3">
             <div class="info">
                 <span class="step-number">Étape 03 : Revenu Progressif</span>
                 <h1>Indice de Solvabilité</h1>
                 <p>Évolution du revenu citoyen basé sur le niveau d'utilité et la confiance.</p>
-                <ul class="sub-sections">
-                    <li>✅ Garantie Level-Lock (750€ - 7500€)</li>
-                    <li>✅ Certification JWT via /save</li>
-                </ul>
+                <ul class="sub-sections" id="list-step3"></ul>
             </div>
             <div class="chart-container"><canvas id="chartRUP"></canvas></div>
         </div>
@@ -86,8 +79,23 @@
         const slides = document.querySelectorAll('.slide');
         let charts = [];
 
+        // --- Injection des sous-modules ---
+        const subModules = {
+            step1: ["Analyse Cognitive", "Skills Matrix (utms_calculator)", "Classes Métiers /dev"],
+            step2: ["Hash RIB (SHA-256)", "Moteur TCN (Subvention/Taxe)", "Blockchain Ledger"],
+            step3: ["Persistance JWT (/save)", "Génération Bulletin (/bp)", "Audit de Valeur"]
+        };
+
+        function renderSubSections() {
+            Object.keys(subModules).forEach((key, index) => {
+                const list = document.getElementById(`list-step${index + 1}`);
+                if (list) {
+                    list.innerHTML = subModules[key].map(sub => `<li>✅ ${sub}</li>`).join('');
+                }
+            });
+        }
+
         function initCharts() {
-            // Chart 1: Radar des Axes Cognitifs
             charts[0] = new Chart(document.getElementById('chartSkills'), {
                 type: 'radar',
                 data: {
@@ -99,10 +107,10 @@
                         borderColor: '#000091',
                         pointBackgroundColor: '#000091'
                     }]
-                }
+                },
+                options: { responsive: true, maintainAspectRatio: false }
             });
 
-            // Chart 2: Flux Fiscalité Circulaire
             charts[1] = new Chart(document.getElementById('chartFiscal'), {
                 type: 'doughnut',
                 data: {
@@ -111,10 +119,10 @@
                         data: [73.2, 6.8, 20],
                         backgroundColor: ['#000091', '#E1000F', '#27AE60']
                     }]
-                }
+                },
+                options: { responsive: true, maintainAspectRatio: false }
             });
 
-            // Chart 3: Courbe de Progression RUP
             charts[2] = new Chart(document.getElementById('chartRUP'), {
                 type: 'line',
                 data: {
@@ -126,7 +134,8 @@
                         fill: false,
                         tension: 0.4
                     }]
-                }
+                },
+                options: { responsive: true, maintainAspectRatio: false }
             });
         }
 
@@ -134,12 +143,15 @@
             slides[currentIdx].classList.remove('active');
             currentIdx = (currentIdx + dir + slides.length) % slides.length;
             slides[currentIdx].classList.add('active');
-            // Stimulation de la mise à jour des graphiques
-            charts[currentIdx].update();
-            console.log("SYSTEM: Interaction recorded. AXIS: ANALYSIS.");
+            
+            if(charts[currentIdx]) charts[currentIdx].update();
+            console.log(`SYSTEM: Navigation active. Step: ${currentIdx + 1}`);
         }
 
-        window.onload = () => { initCharts(); };
+        window.onload = () => { 
+            initCharts(); 
+            renderSubSections();
+        };
     </script>
 </body>
 </html>

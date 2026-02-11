@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PRCR | Gouvernance Souveraine</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        /* Ajustements pour intégration slider */
+        .main-viewer { padding: 0; display: flex; align-items: center; justify-content: center; background: var(--gov-light); }
+        #slider-root { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; }
+    </style>
+</head>
+<body>
+    <header class="gov-header">
+        <div class="gov-logo">République<br>du Numérique</div>
+        <nav class="gov-nav">
+            <a href="index.html" class="nav-link active" data-page="vision">Vision</a>
+            <a href="economie.html" class="nav-link" data-page="circular">Économie</a>
+            <a href="cvnu.html" class="nav-link" data-page="cvnu">CV Numérique</a>
+            <a href="rup.html" class="nav-link" data-page="rup">Revenu (RUP)</a>
+        </nav>
+    </header>
+
+    <main class="dashboard-container">
+        <aside class="left-aside" id="dynamic-sidebar">
+            </aside>
+
+        <div class="main-viewer">
+            <div id="slider-root">
+                </div>
+        </div>
+    </main>
+
+    <footer class="hud-footer">
+        <p>&copy; 2026 CVNU - Phase 3 (Souveraineté Applicative)</p>
+    </footer>
+
+    <script type="module" src="utms_calculator.js"></script>
+    <script type="module" src="circular_tax_engine.js"></script>
+    <script type="module" src="CORE_SYSTEM_CVNU.js"></script>
+    <script type="module" src="app_orchestrator.js"></script>
+</body>
+</html>

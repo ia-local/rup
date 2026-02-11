@@ -1,0 +1,19 @@
+{
+  "ANALYSE_BRUTE": {
+    "BASE_MOTS": "28 mots x 0.50 UTMi",
+    "VALEUR_BASE": "14.00 UTMi",
+    "BONUS_THÉMATIQUE": "+3.00 UTMi (Fiscal/Economic)",
+    "BONUS_CONCEPT": "+5.00 UTMi",
+    "TOTAL_BRUT": "22.00 UTMi (22.00€)"
+  },
+  "MOTEUR_FISCAL": {
+    "RATIO_CIRCULARITÉ": "1250 (Éligible Subvention TCN)",
+    "TAXE_IA_6.8": "0.00€ (Exonérée)",
+    "SUBVENTION_TCN": "+2.20€ (10% sur performance)",
+    "ABATTEMENT_CVNU": "Appliqué (Niveau 4)"
+  },
+  "RÉSULTAT_NET": {
+    "CRÉDIT_RUP_IMMÉDIAT": "24.20 €",
+    "DESTINATION": "Compte d'attente Classe 4 (471)"
+  }
+}

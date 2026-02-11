@@ -93,9 +93,11 @@ const SOURCE_CONFIG = {
     repo: "https://github.com/ia-local/rup",
     branch: "main",
     sync_mode: "AUTOMATIC_HOT_RELOAD",
-    access_token: process.env.GITHUB_SYNC_TOKEN // Pour les push/pull sécurisés
+    // Correction : Utilisation d'un fallback si process n'est pas défini
+    access_token: (typeof process !== 'undefined' && process.env) 
+        ? process.env.GITHUB_SYNC_TOKEN 
+        : null 
 };
-
 async function syncKernelWithGithub() {
     console.log("📡 [KERNEL] Synchronisation avec le répertoire source (Phase 3)...");
     // Logique de fetch vers github.com/ia-local/rup
