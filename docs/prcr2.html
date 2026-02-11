@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PRCR | Présentation Officielle du Revenu Citoyen</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        :root {
+            --gov-blue: #000091; /* */
+            --gov-accent: #27AE60; /* */
+        }
+        body {
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            background-color: #f5f7fa; /* */
+        }
+        .slider-wrapper {
+            flex: 1;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        .slide {
+            display: none;
+            width: 100%;
+            max-width: 1100px;
+            padding: 2.5rem;
+            background: white;
+            border-top: 6px solid var(--gov-blue); /* */
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            animation: slideIn 0.5s ease-out;
+        }
+        .slide.active { display: grid; grid-template-columns: 1.2fr 1fr; gap: 30px; }
+        
+        .step-number {
+            font-weight: 900;
+            font-size: 1.1rem;
+            color: var(--gov-blue);
+            text-transform: uppercase;
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+        .slide h1 { font-size: 2.2rem; margin-bottom: 1rem; color: var(--gov-blue); }
+        
+        /* Conteneur de diagramme ASCII */
+        .diag-container {
+            font-family: monospace;
+            background: #1e1e1e;
+            color: #00ff00;
+            padding: 15px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            line-height: 1.2;
+            overflow-x: auto;
+            white-space: pre;
+        }
+
+        .sub-sections {
+            list-style: none;
+            padding: 0;
+            margin-top: 15px;
+        }
+        .sub-sections li {
+            background: #f0f3ff;
+            margin-bottom: 8px;
+            padding: 10px;
+            border-left: 4px solid var(--gov-accent);
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .controls {
+            padding: 1.5rem;
+            background: white;
+            border-top: 1px solid #ddd;
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+        }
+        
+        .cta-gov { animation: pulse-rup 2s infinite; }
+        @keyframes pulse-rup {
+            0% { box-shadow: 0 0 0 0 rgba(0, 0, 145, 0.4); }
+            70% { box-shadow: 0 0 0 10px rgba(0, 0, 145, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(0, 0, 145, 0); }
+        }
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(30px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+    </style>
+</head>
+<body>
+
+    <header class="gov-header">
+        <div class="gov-logo">République<br>du Numérique</div>
+        <div style="font-size: 0.8rem; text-align: right;">
+            <b>PROTOCOLE LÉGALIS-FR</b><br>
+            NOYAU CVNU : <span id="kernel-ver">v2.5.0</span>
+        </div>
+    </header>
+
+    <div class="slider-wrapper">
+        <div class="slide active" id="s1">
+            <div class="info">
+                <span class="step-number">Étape 01 : Mining Cognitif</span>
+                <h1>Enregistrement CVNU</h1>
+                <p>Analyse de l'utilité réelle et calcul des plis cognitifs (Strategy, Analysis, Synthesis).</p>
+                <ul class="sub-sections" id="sub1"></ul>
+            </div>
+            <div class="diag-container" id="diag1"></div>
+        </div>
+
+        <div class="slide" id="s2">
+            <div class="info">
+                <span class="step-number">Étape 02 : Flux Blockchain</span>
+                <h1>Indexation & Taxe IA</h1>
+                <p>Liaison souveraine via Hash SHA-256 et moteur de redistribution circulaire.</p>
+                <ul class="sub-sections" id="sub2"></ul>
+            </div>
+            <div class="diag-container" id="diag2"></div>
+        </div>
+
+        <div class="slide" id="s3">
+            <div class="info">
+                <span class="step-number">Étape 03 : Payday</span>
+                <h1>Validation & Bulletin</h1>
+                <p>Certification du virement par Smart Contract et persistance de session JWT.</p>
+                <ul class="sub-sections" id="sub3"></ul>
+            </div>
+            <div class="diag-container" id="diag3"></div>
+        </div>
+    </div>
+
+    <footer class="controls">
+        <button class="nav-btn" onclick="moveSlide(-1)">Précédent</button>
+        <button class="cta-gov" onclick="moveSlide(1)">Action Suivante</button>
+    </footer>
+
+    <script>
+        // Contenu dynamique issu du Kernel
+        const subModules = {
+            step1: ["Analyse Cognitive NLP", "Skills Matrix (utms_calculator)", "Classes Métiers /dev"],
+            step2: ["Hash RIB (SHA-256)", "Moteur TCN (Subvention/Taxe)", "Blockchain Ledger Sync"],
+            step3: ["Persistance JWT (/save)", "Génération Bulletin (/bp)", "Validation Smart Contract"]
+        };
+
+        const diagrams = {
+            diag1: `[IN] CV/TEXTE ──▶ [COGNITIVE_EVAL]\n         │             │\n         ▼             ▼\n[AXES_COGNITIFS] ◀──▶ [LEVEL_1_10]`,
+            diag2: `[RIB_IBAN] ──▶ [SHA256_HASH]\n      │              │\n      ▼              ▼\n[TAX_IA_6.8%] ──▶ [RUP_FUND]`,
+            diag3: `[DISTRIBUTE] ──▶ [SMART_CONTRACT]\n       │               │\n       ▼               ▼\n[GEN_BULLETIN] ◀──▶ [JWT_SAVE_TOKEN]`
+        };
+
+        let currentIdx = 0;
+        const slides = document.querySelectorAll('.slide');
+
+        function renderInterface() {
+            // Rendu des sous-sections
+            document.getElementById('sub1').innerHTML = subModules.step1.map(s => `<li>✅ ${s}</li>`).join('');
+            document.getElementById('sub2').innerHTML = subModules.step2.map(s => `<li>✅ ${s}</li>`).join('');
+            document.getElementById('sub3').innerHTML = subModules.step3.map(s => `<li>✅ ${s}</li>`).join('');
+            
+            // Rendu des diagrammes ASCII
+            document.getElementById('diag1').textContent = diagrams.diag1;
+            document.getElementById('diag2').textContent = diagrams.diag2;
+            document.getElementById('diag3').textContent = diagrams.diag3;
+        }
+
+        function moveSlide(dir) {
+            slides[currentIdx].classList.remove('active');
+            currentIdx = (currentIdx + dir + slides.length) % slides.length;
+            slides[currentIdx].classList.add('active');
+            
+            // Interaction valorisée à +2 UTMi par le système
+            console.log("SYSTEM: Interaction recorded at slide " + currentIdx);
+        }
+
+        window.onload = renderInterface;
+    </script>
+</body>
+</html>

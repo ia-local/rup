@@ -1,0 +1,46 @@
+.chatroom-modal {
+    position: fixed;
+    bottom: 100px;
+    right: 30px;
+    width: 400px;
+    height: 500px;
+    background: var(--gov-white);
+    border: 2px solid var(--gov-blue);
+    display: flex;
+    flex-direction: column;
+    z-index: 1000;
+    box-shadow: var(--shadow);
+}
+
+.chat-header {
+    background: var(--gov-blue);
+    color: white;
+    padding: 10px;
+    display: flex;
+    justify-content: space-between;
+    font-weight: bold;
+}
+
+.chat-body {
+    flex: 1;
+    padding: 15px;
+    overflow-y: auto;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.9rem;
+}
+
+.user-msg { color: var(--gov-text); background: #eee; margin: 5px 0; padding: 8px; border-radius: 4px; }
+.assistant-msg { color: var(--gov-blue); background: #eef4ff; margin: 5px 0; padding: 8px; border-left: 3px solid var(--gov-accent); }
+.system-msg { font-style: italic; color: #666; text-align: center; font-size: 0.8rem; }
+
+.chat-footer { padding: 10px; border-top: 1px solid var(--gov-border); display: flex; }
+.chat-footer input { flex: 1; padding: 8px; border: 1px solid var(--gov-border); }
+
+.monetization-status {
+    background: var(--gov-accent);
+    color: white;
+    text-align: center;
+    padding: 5px;
+    font-size: 0.8rem;
+    font-weight: bold;
+}

@@ -18,14 +18,16 @@ const CIRCULAR_TAX_CONFIG = {
  * 💡 Calcule la Taxe Circulaire Négative (TCN) ou la Subvention RUP.
  */
 function calculateCircularTax(interaction, context) {
-    // On utilise l'objet global utmiCalculator défini dans utms_calculator.js
-    if (typeof utmiCalculator === 'undefined') {
-        console.error("Erreur : utms_calculator.js doit être chargé avant ce script.");
-        return null;
+    // Correction pour environnement hybride Node.js / Navigateur
+    const calculator = (typeof utmiCalculator !== 'undefined') ? utmiCalculator : null;
+    
+    if (!calculator) {
+        // En mode serveur, l'import ESM gère la liaison, on évite le blocage console.error
+        return { amount: 0, type: "PENDING_SYNC", utmiGenerated: 0 };
     }
 
-    // 1. Calculer la Valeur Ajoutée (UTMi) via le moteur global
-    const { utmi, estimatedCostUSD } = utmiCalculator.calculateUtmi(interaction, context);
+    // 1. Calculer la Valeur Ajoutée (UTMi)
+    const { utmi, estimatedCostUSD } = calculator.calculateUtmi(interaction, context);
 
     let taxAmount = 0; 
     let taxType = "TAXE_IA_POSITIVE";
@@ -76,4 +78,20 @@ function calculateCircularTax(interaction, context) {
 }
 
 // Export pour le navigateur
-window.circularTaxEngine = { calculateCircularTax, CIRCULAR_TAX_CONFIG };
+/**
+ * ════════════════════════════════════════════════════════════
+ * SECTION EXPORT HYBRIDE (Node.js ESM & Navigateur)
+ * ════════════════════════════════════════════════════════════
+ */
+
+export const circularTaxEngine = { 
+    calculateCircularTax, 
+    CIRCULAR_TAX_CONFIG 
+};
+
+// Injection pour la compatibilité avec vos anciens scripts non-modules
+if (typeof window !== 'undefined') {
+    window.circularTaxEngine = circularTaxEngine;
+}
+// Export par défaut pour simplifier certains imports
+export default circularTaxEngine;

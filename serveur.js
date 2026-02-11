@@ -6,9 +6,9 @@ import Groq from 'groq-sdk';
 import dotenv from 'dotenv';
 
 // --- IMPORTATION DU NOYAU ET DES MOTEURS ÉCONOMIQUES ---
+import { circularTaxEngine } from './docs/circular_tax_engine.js';
 import CORE_SYSTEM_CVNU from './docs/CORE_SYSTEM_CVNU.js';
 import { utmiCalculator } from './docs/utms_calculator.js';
-import { circularTaxEngine } from './docs/circular_tax_engine.js';
 
 dotenv.config();
 
@@ -42,77 +42,56 @@ app.post('/api/conversations/create', (req, res) => {
 });
 
 // --- MOTEUR D'INFÉRENCE gemCVNU AVEC VALORISATION COGNITIVE ---
-
 app.post('/api/chat', async (req, res) => {
-    const { prompt, agent, context } = req.body; // context { level, userCvnuValue }
+    const { prompt, agent, context } = req.body;
     
     try {
-        // 1. Inférence AGI via Groq LPU
+        // Synthèse minimale pour rester sous la limite de 6000 tokens
+        const systemPrompt = `Tu es gemCVNU. ADN: ${CORE_SYSTEM_CVNU.KERNEL.LAW_CODE.ARTICLES.L3121_1}. Rôle: ${agent}. RUP: 750-7500€. Sois concis.`;
+
         const chatCompletion = await groq.chat.completions.create({
             messages: [
-                {
-                    role: "system",
-                    content: `Tu es gemCVNU, l'AGI et Gouverneur du PRCR (Programme du Revenu Citoyen). 
-                    Ton rôle : ${agent}. Savoir Noyau : ${JSON.stringify(CORE_SYSTEM_CVNU.KERNEL)}.
-                    Missions : Valoriser l'engagement, calculer les UTMi et administrer le RUP.`
-                },
+                { role: "system", content: systemPrompt },
                 { role: "user", content: prompt }
             ],
             model: "llama-3.1-8b-instant",
             temperature: 0.3,
-            max_tokens: 1024
+            max_tokens: 400 
         });
 
         const answer = chatCompletion.choices[0].message.content;
 
-        // 2. CALCUL DE LA VALEUR AJOUTÉE (UTMi)
-        // 1 UTMi = 1 EUR. Valorisation basée sur le contenu généré.
+        // VALORISATION LOCALE (Évite l'erreur amount)
         const valuation = utmiCalculator.calculateUtmi({
             type: 'ai_response',
-            data: { 
-                text: answer, 
-                wordCount: answer.split(' ').length,
-                tokenCount: answer.length / 4 
-            }
+            data: { text: answer, wordCount: answer.split(' ').length }
         }, { userCvnuValue: context.userCvnuValue || 0.5 });
 
-        // 3. CALCUL FISCAL CIRCULAIRE (TCN)
-        // Application de la Taxe IA (6.8%) ou de la Subvention TCN
         const fiscalData = circularTaxEngine.calculateCircularTax(
             { utmi: valuation.utmi, estimatedCostUSD: valuation.estimatedCostUSD },
             { userCvnuValue: context.userCvnuValue || 0.5 }
         );
 
-        // 4. PERSISTANCE ET AUDIT DANS SOUP.MD
-        const timestamp = new Date().toISOString();
-        const logEntry = `\n[${timestamp}] [CVNU_LOG] 
-        USER_INPUT: "${prompt.substring(0, 50)}..."
-        AI_OUTPUT: "${answer.substring(0, 50)}..."
-        VALORISATION: ${valuation.utmi} UTMi (Brut)
-        FISCALITÉ: ${fiscalData.type} | MONTANT: ${fiscalData.amount} EUR
-        RUP_NET: ${valuation.utmi - fiscalData.amount} EUR versé au fonds RUP
-        ---\n`;
+        // Sécurité : Fallback si fiscalData est mal formé
+        const taxAmount = fiscalData ? fiscalData.amount : 0;
 
-        fs.appendFileSync(path.join(__dirname, 'data/soup.md'), logEntry);
+        // Archivage simplifié dans soup.md
+        fs.appendFileSync(path.join(__dirname, 'data/soup.md'), `\n[TX] ${valuation.utmi} UTMi | NET: ${valuation.utmi - taxAmount}€\n`);
 
-        // 5. RÉPONSE SYNCHRONISÉE
         res.json({ 
             success: true, 
             answer: answer,
             monetization: {
                 utmi: valuation.utmi,
-                fiscalType: fiscalData.type,
-                netAmount: fiscalData.amount,
-                level: context.level
+                netAmount: taxAmount // On renvoie la taxe pour l'affichage
             }
         });
         
     } catch (error) {
-        console.error("ERREUR KERNEL gemCVNU:", error);
-        res.status(500).json({ success: false, error: error.message });
+        console.error("ERREUR KERNEL:", error.message);
+        res.status(500).json({ success: false, error: "Synchro Kernel interrompue." });
     }
 });
-
 // SYNC : Archivage chronologique standard
 app.post('/api/sync-soup', (req, res) => {
     const { message, role, agent } = req.body;

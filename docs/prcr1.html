@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PRCR | Présentation Officielle du Revenu Citoyen</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        :root {
+            --gov-blue: #000091; /* */
+            --gov-accent: #27AE60; /* */
+        }
+        body {
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+        }
+        .slider-wrapper {
+            flex: 1;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .slide {
+            display: none;
+            width: 90%;
+            max-width: 1000px;
+            padding: 3rem;
+            background: white;
+            border-top: 6px solid var(--gov-blue);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            animation: slideIn 0.5s ease-out;
+        }
+        .slide.active { display: block; }
+        .step-number {
+            font-weight: 900;
+            font-size: 1.2rem;
+            color: var(--gov-blue);
+            text-transform: uppercase;
+            margin-bottom: 1rem;
+            display: block;
+        }
+        .slide h1 { font-size: 2.5rem; margin-bottom: 1.5rem; color: var(--gov-blue); }
+        .visual-placeholder {
+            width: 100%;
+            height: 250px;
+            background: #f0f0f0;
+            margin: 1.5rem 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 4px;
+            border: 2px dashed #ccc;
+            /* Emplacement pour vos visuels Meta.ai */
+        }
+        .controls {
+            padding: 2rem;
+            background: white;
+            border-top: 1px solid #ddd;
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+        }
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(50px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+    </style>
+</head>
+<body>
+
+    <header class="gov-header">
+        <div class="gov-logo">République<br>du Numérique</div>
+        <div style="font-size: 0.8rem; text-align: right;">PROTOCOLE LÉGALIS-FR<br>DÉFI 28 JOURS</div>
+    </header>
+
+    <div class="slider-wrapper">
+        <div class="slide active" id="s1">
+            <span class="step-number">Action 01 : Valorisation</span>
+            <h1>Enregistrez votre CVNU</h1>
+            <p class="tagline">Votre parcours est un actif. L'IA extrait votre identité souveraine et calcule votre palier initial (Level 1 à 10).</p>
+            <div class="visual-placeholder">
+                <p>[ INSÉRER VISUEL META.AI : MINING COGNITIF ]</p>
+            </div>
+            <div class="law-quote">"Mining Cognitif : 1 UTMi = 1 EUR" <cite>utms_calculator.js</cite></div>
+        </div>
+
+        <div class="slide" id="s2">
+            <span class="step-number">Action 02 : Sécurisation</span>
+            <h1>Indexez votre RIB</h1>
+            <p class="tagline">Liaison cryptographique SHA-256. Aucune donnée n'est stockée en clair sur la blockchain.</p>
+            <div class="visual-placeholder" style="background: #eef3ff;">
+                <p>[ INSÉRER VISUEL META.AI : SÉCURISATION BLOCKCHAIN ]</p>
+            </div>
+            <p><strong>Statut :</strong> Liaison avec <code>TVA_RIB_Synchronizer.sol</code> certifiée.</p>
+        </div>
+
+        <div class="slide" id="s3">
+            <span class="step-number">Action 03 : Déblocage</span>
+            <h1>Recevez votre Revenu</h1>
+            <p class="tagline">La preuve de virement immuable débloque votre Revenu Universel Progressif (750€ - 7500€).</p>
+            <div class="visual-placeholder" style="border: 2px solid var(--gov-accent);">
+                <p>[ INSÉRER VISUEL META.AI : TRANSFERT SMART CONTRACT ]</p>
+            </div>
+            <div class="cta-gov" style="text-align:center; padding: 1rem; cursor:pointer;">
+                DÉBLOQUER MON RUP MAINTENANT
+            </div>
+        </div>
+    </div>
+
+    <footer class="controls">
+        <button class="nav-btn" onclick="moveSlide(-1)">Précédent</button>
+        <button class="cta-gov" onclick="moveSlide(1)">Suivant / Action</button>
+    </footer>
+
+    <script>
+        let currentIdx = 0;
+        const slides = document.querySelectorAll('.slide');
+
+        function moveSlide(dir) {
+            slides[currentIdx].classList.remove('active');
+            currentIdx = (currentIdx + dir + slides.length) % slides.length;
+            slides[currentIdx].classList.add('active');
+            
+            // Notification au Kernel pour valorisation de l'interaction
+            console.log("PRCR_UI_EVENT: Slide changed to " + currentIdx);
+        }
+    </script>
+</body>
+</html>

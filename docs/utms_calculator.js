@@ -1,7 +1,10 @@
 // server_modules/utms_calculator.js (Nouvelle Version pour 1 UTMi = 1 EUR)
 
 // Importation des scores de qualité des modèles
-const MODEL_QUALITY_SCORES = window.MODEL_QUALITY_SCORES || { default: { quality_multiplier: 1.0 } };
+// 1. Initialisation sécurisée des scores (Compatible Node.js & Navigateur)
+const MODEL_QUALITY_SCORES = (typeof window !== 'undefined' && window.MODEL_QUALITY_SCORES) 
+    ? window.MODEL_QUALITY_SCORES 
+    : { default: { quality_multiplier: 1.0 } };
 /**
  * Moteur de calcul des Unités Temporelles Monétisables (UTMi) et d'analyse des insights.
  * Cette version intègre :
@@ -560,7 +563,13 @@ function calculateDashboardInsights(logs) {
 
 // Exportation des fonctions et coefficients
 // UTILISEZ CECI :
-window.utmiCalculator = {
+/**
+ * ════════════════════════════════════════════════════════════
+ * SECTION EXPORT HYBRIDE (Node.js ESM & Navigateur)
+ * ════════════════════════════════════════════════════════════
+ */
+
+export const utmiCalculator = {
     calculateUtmi,
     calculateDashboardInsights,
     COEFFICIENTS,
@@ -569,3 +578,14 @@ window.utmiCalculator = {
     analyzeTextForThemes,
     calculateActivityScore
 };
+
+
+// Injection sécurisée dans le navigateur
+if (typeof window !== 'undefined') {
+    window.utmiCalculator = utmiCalculator;
+    if (!window.MODEL_QUALITY_SCORES) {
+        window.MODEL_QUALITY_SCORES = { default: { quality_multiplier: 1.0 } };
+    }
+}
+
+export default utmiCalculator;

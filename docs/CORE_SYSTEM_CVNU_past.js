@@ -85,22 +85,7 @@ const cryptoUtils = {
         return Math.random().toString(36).substring(2, 15) + Date.now().toString(36).slice(-4);
     }
 };
-/**
- * [MODULE] SOURCE_RECOVERY_PROTOCOL
- * Lie le Kernel au repository GitHub pour les mises à jour à chaud.
- */
-const SOURCE_CONFIG = {
-    repo: "https://github.com/ia-local/rup",
-    branch: "main",
-    sync_mode: "AUTOMATIC_HOT_RELOAD",
-    access_token: process.env.GITHUB_SYNC_TOKEN // Pour les push/pull sécurisés
-};
 
-async function syncKernelWithGithub() {
-    console.log("📡 [KERNEL] Synchronisation avec le répertoire source (Phase 3)...");
-    // Logique de fetch vers github.com/ia-local/rup
-    // Mise à jour de utms_calculator.js et rup_manager.js
-}
 /**
 /**
  * KERNEL (NOYAU)
@@ -1119,7 +1104,7 @@ const system = {
      */
     async callLlama(prompt, role = "Architecte AGI CVNU") {
         try {
-            const response = await fetch('http://localhost:3145/api/ai', {
+            const response = await fetch('http://localhost:3145/api/pi', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ 
@@ -3582,10 +3567,10 @@ async signTokenAsync(header, payload, secret) {
                 const wrappedAgi = this.wrapASCII("AGI ROUTING ENGINE", agiContent);
 
                 // On ajoute le flag de transport pour le Front-end
-                return `__BRIDGE_AGI__${wrappedAgi}`;
+                return `${wrappedAgi}`;
 
         // 3. ROUTAGE AI (BRUT)
-            case '/ai':
+            case '/pi':
                 const aiPrompt = args.join(' ');
                 this.createMessageInstance('USER', aiPrompt);
                 const wrappedAi = this.wrapASCII("AI STREAM", aiPrompt);
@@ -3635,28 +3620,7 @@ async signTokenAsync(header, payload, secret) {
                 
             case KERNEL.COMMANDS.LOAD:
                 return PersistenceManager.load(args.join('')).then(msg => msg);
-            case '/diag':
-    const type = args[0] ? args[0].toLowerCase() : 'help';
-    const content = args.slice(1).join(' ');
-
-    switch(type) {
-        case 'flow':
-            return system.wrapASCII("DIAGRAMME DE FLUX", DiagramEngine.generateFlow(content));
-        case 'arch':
-            const [root, ...comps] = content.split(',');
-            return system.wrapASCII("ARCHITECTURE SYSTÈME", DiagramEngine.generateArch(root, comps));
-        case 'seq':
-            // Exemple: /diag seq USER,AGI,SC | USER|AGI|Prompt | AGI|SC|Sign
-            const [actorsStr, ...sequenceSteps] = content.split('|');
-            const actors = actorsStr.split(',');
-            return system.wrapASCII("DIAGRAMME DE SÉQUENCE", DiagramEngine.generateSequence(actors, sequenceSteps));
-        default:
-            return system.wrapASCII("AIDE DIAGRAMME", 
-                "Usage:\n" +
-                "/diag flow [Etape1 -> Etape2]\n" +
-                "/diag arch [Root, Comp1, Comp2]\n" +
-                "/diag seq [A,B | A|B|Label]");
-    }
+            
             case KERNEL.COMMANDS.START:
     // Initialiser le système si ce n'est pas déjà fait
     if (typeof CVNU_SYSTEM !== 'undefined' && CVNU_SYSTEM.init) {
@@ -3720,14 +3684,13 @@ async signTokenAsync(header, payload, secret) {
             return this.wrapASCII("AUDIT DE VALEUR & MONÉTISATION", display);
 
             case KERNEL.COMMANDS.PERIMETER:
-            if (args[0] === 'mission') {
-                    return this.wrapASCII("MISSION PÉRIMÈTRE", this.simulatePerimeterMission());
-                } else if (args[0] === 'geo') {
-                    // Nouvelle commande géographie
-                    return this.analyzeGeoFiscality(args[1] || "BAVENT_14860");
+                if (args[0] === 'mission') {
+                    const missionResult = this.simulatePerimeterMission();
+                    return this.wrapASCII("MISSION PÉRIMÈTRE", missionResult);
                 } else {
-                    return this.wrapASCII("ANALYSE PÉRIMÈTRE", this.analyzePerimeter());
-            }
+                    const analysis = this.analyzePerimeter();
+                    return this.wrapASCII("ANALYSE PÉRIMÈTRE", analysis);
+                }
 
             case KERNEL.COMMANDS.DEV:
             if (command === '/DEV' && args[0] === 'generate') {
@@ -4087,6 +4050,7 @@ async signTokenAsync(header, payload, secret) {
         
         // On peut choisir d'ajouter le biais à la réponse ou de le garder en log interne
         console.log("AGI_AWARENESS_LOG:", biasOutput);
+        return response;
     },
     /**
      * Génère le paquet de données pour le /gem sync
@@ -4211,105 +4175,7 @@ async signTokenAsync(header, payload, secret) {
         }
     }
 };
-/**
- * ════════════════════════════════════════════════════════════
- * MODULE: GOUVERNANCE / RIC (Patch i-5146)
- * @role Gestion de la Démocratie Directe & Veto Souverain
- * @legal_ref https://petitions.assemblee-nationale.fr/initiatives/i-5146
- * ════════════════════════════════════════════════════════════
- */
-const RIC_CONFIG = {
-    QUORUM_REQUIRED: 0.51,       // 51% de participation min.
-    WHITE_VOTE_WEIGHT: 1.0,      // Le blanc est un suffrage exprimé
-    INVALIDATION_THRESHOLD: 0.50 // Si >50% Blancs = REJET SOUVERAIN (Veto)
-};
 
-class GovernanceDAO {
-    
-    constructor(citizensList = []) {
-        this.voters = citizensList; // Liste des CVNU ID éligibles
-        this.currentProposal = null;
-        this.history = [];
-    }
-
-    /**
-     * Soumet une proposition au vote (ex: Offre du Liquidateur)
-     */
-    submitProposal(proposalID, description, author = "SYSTEM") {
-        this.currentProposal = {
-            id: proposalID,
-            author: author,
-            description: description,
-            votes: { yes: 0, no: 0, blank: 0 },
-            total_votes: 0,
-            status: "OPEN",
-            timestamp: new Date().toISOString()
-        };
-        console.log(`[🗳️ RIC] Scrutin Ouvert : ${description}`);
-        return this.currentProposal;
-    }
-
-    /**
-     * Enregistre un vote cryptographique
-     * @param {string} choice - 'YES', 'NO', ou 'BLANK' (Vote Blanc)
-     */
-    castVote(citizenID, choice) {
-        if (!this.currentProposal || this.currentProposal.status !== "OPEN") {
-            return { error: "POLL_CLOSED" };
-        }
-
-        const c = choice.toUpperCase();
-        if (['YES', 'NO', 'BLANK'].includes(c)) {
-            this.currentProposal.votes[c.toLowerCase()]++;
-            this.currentProposal.total_votes++;
-            return { status: "VOTE_RECORDED", hash: `VOTE_${citizenID}_${Date.now()}` };
-        }
-        return { error: "INVALID_CHOICE" };
-    }
-
-    /**
-     * Clôture le RIC et applique le Patch i-5146
-     */
-    closePoll() {
-        const p = this.currentProposal;
-        if (!p) return null;
-
-        const total = p.total_votes;
-        if (total === 0) return { status: "VOID", reason: "NO_PARTICIPATION" };
-
-        // Calculs pourcentages
-        const scoreYes = p.votes.yes / total;
-        const scoreBlank = p.votes.blank / total;
-
-        // LOGIQUE i-5146 : LE VETO SOUVERAIN
-        if (scoreBlank > RIC_CONFIG.INVALIDATION_THRESHOLD) {
-            p.status = "REJECTED_BY_SOVEREIGNTY";
-            const result = {
-                status: "VETO_ACTIF",
-                reason: "MAJORITE_BLANCHE (>50%)",
-                legal_effect: "ANNULATION_PROCEDURE", // Bloque le Liquidateur
-                details: p.votes
-            };
-            this._archive(p);
-            return result;
-        }
-
-        // Logique Binaire classique (si pas de Veto)
-        p.status = scoreYes > 0.5 ? "ACCEPTED" : "REFUSED";
-        const result = {
-            status: p.status,
-            score_yes: (scoreYes * 100).toFixed(1) + "%",
-            details: p.votes
-        };
-        this._archive(p);
-        return result;
-    }
-
-    _archive(proposal) {
-        this.history.push(proposal);
-        this.currentProposal = null;
-    }
-}
 /**
  * MOTEUR COGNITIF (SYMBIOSE HUMAIN-IA)
  * Interprète les prompts structurés comme des instructions de processeur.
@@ -4896,12 +4762,146 @@ const UrbanResourceSystem = {
  * ASCIIGraphicEngine - Moteur de rendu hybride 8-bit
  * Inspiré par la structure OpenGL (Shaders & Fragments)
  */
+class AsciiRasterizer {
+    constructor() {
+        this.ramps = {
+            BIT_1: [' ', '█'],
+            BIT_4: [' ', '░', '▒', '▓', '█'],
+            BIT_8: [' ', '.', ':', '-', '=', '+', '*', '#', '%', '@'],
+            GEO:   [' ', '≈', '·', '▓', '▲'], // Eau, Plaine, Forêt, Montagne
+            WATER: [' ', '·', '~', '≈', '≋']
+            
+        };
 
+this.fragmentShaders = {
+    TERRAIN: (luma) => {
+        if (luma < 75)  return { char: '≈', color: 'BLUE' };
+        if (luma < 95)  return { char: '░', color: 'YELLOW' };
+        if (luma < 170) return { char: '·', color: 'GREEN' };
+        if (luma < 215) return { char: '▓', color: 'GREEN' };
+        return { char: '▲', color: 'WHITE' };
+    },
+    // TU AJOUTES ÇA JUSTE ICI :
+    GMT_ZONE: (frag) => {
+        if (!frag.isLand) return { char: ' ', color: 'BLUE' };
+        if (frag.tz === 0) return { char: '█', color: 'GREEN' }; 
+        if (frag.tz < 0)   return { char: '▒', color: 'BLUE' };  
+        return { char: '░', color: 'ORANGE' };                
+    }
+};
+this.fragmentShaders.GMT_ZONE = (frag) => {
+    // Si c'est de l'eau (fond de la carte GMT)
+    if (!frag.isLand) return { char: ' ', color: 'WHITE' };
+
+    // Si c'est un continent, on colore selon le décalage horaire
+    if (frag.tz === 0) return { char: '█', color: 'GREEN' }; // Fuseau local
+    if (frag.tz < 0) return { char: '▒', color: 'BLUE' };   // Ouest (Retard)
+    return { char: '░', color: 'ORANGE' };                 // Est (Avance)
+};
+this.fragmentShaders.GMT_DITHER = (frag) => {
+    // Si c'est de la terre, on applique un damier (Dithering)
+    const isPoint = (x % 2 === 0 && y % 2 === 0);
+    if (frag.isLand) {
+        return isPoint ? { char: '●', color: 'BLUE' } : { char: ' ', color: 'BLACK' };
+    }
+    return { char: ' ', color: 'BLACK' };
+};
+    }
+
+    /**
+     * Pipeline de rendu (Simule le glDrawArrays)
+     */
+draw(width = 64, height = 20, zoom, shaderType) {
+    const buffer = this.generateProceduralBuffer(width, height, zoom);
+    const shader = this.fragmentShaders[shaderType] || this.fragmentShaders.TERRAIN;
+    
+    return buffer.map((row) => {
+        let line = "";
+        row.forEach((luma) => {
+            const frag = shader(luma);
+            // On n'injecte la couleur que si le système de colorisation existe
+            if (typeof system !== 'undefined' && system.colorize) {
+                line += system.colorize(frag.char, frag.color);
+            } else {
+                line += frag.char;
+            }
+        });
+        return line;
+    });
+}
+    generateProceduralBuffer(width, height, zoom = 1) {
+        const buffer = [];
+        for (let y = 0; y < height; y++) {
+            const row = [];
+            for (let x = 0; x < width; x++) {
+                const freq = 0.1 / zoom;
+                // Bruit mathématique 8-bit (0-255)
+                const noise = (Math.sin(x * freq) + Math.cos(y * freq)) * 127 + 128;
+                row.push(Math.floor(noise));
+            }
+            buffer.push(row);
+        }
+        return buffer;
+    }
+}
 /**
  * MOTEUR CARTOGRAPHIQUE ASCII (GEO-SPATIAL)
  * Gère le rendu "Planétaire -> Local" et l'humidification (Zoom).
  */
+class AsciiGeoEngine {
+    constructor() {
+        this.rasterizer = new AsciiRasterizer();
+        this.rasterizer = new AsciiRasterizer();
+        this.resolution = { x: 64, y: 32 }; // Cible 64 pixels 8-BIT
+        this.center = { lat: 48.8566, lon: 2.3522 }; // Bavent / Paris
+        
+        // Configuration de l'affichage
+        this.config = {
+            zoom: 1,       // 1 = Monde, 5 = Région, 10 = Local
+            mode: 'GEO',   // GEO, BIT_8, HEATMAP
+            shader: 'TERRAIN',
+            showGrid: false
+        };
+    }
 
+    /**
+     * Change le niveau de zoom (Humidification)
+     * @param {string} direction 'IN' | 'OUT'
+     */
+    setZoom(direction) {
+        if (direction === 'IN') this.config.zoom = Math.min(this.config.zoom * 2, 20);
+        if (direction === 'OUT') this.config.zoom = Math.max(this.config.zoom / 2, 1);
+        return this.config.zoom;
+    }
+
+render() {
+    const width = this.resolution.x; // 64
+    
+    // 1. Génération du buffer 8-BIT colorisé
+    const frameBuffer = this.rasterizer.draw(
+        this.resolution.x, 
+        this.resolution.y, 
+        this.config.zoom,
+        this.config.shader
+    );
+
+    // 2. Construction des bordures simples (Standard W3C / Sémantique)
+    const top    = "┌" + "─".repeat(width) + "┐";
+    const bottom = "└" + "─".repeat(width) + "┘";
+    
+    // 3. Assemblage avec les bords latéraux
+    const framedMap = frameBuffer.map(line => `│${line}│`);
+
+    // 4. Retour du bloc complet
+    return [
+        `\n[ TACTICAL MAP - 64px ]`,
+        top,
+        ...framedMap,
+        bottom,
+        `[ ZOOM: x${this.config.zoom} | SHADER: ${this.config.shader} ]\n`
+    ].join('\n');
+}
+}
 // Classe métier pour les emplois urbains
 class UrbanJob {
     constructor(config = {}) {
@@ -4947,307 +4947,170 @@ class UrbanJob {
         return Math.round(base * multiplier * this.productivity);
     }
 }
-
 /**
- * CVNU_GRAPHIC_PIPELINE
- * Architecture standardisée Stage-by-Stage pour rendu hybride ASCII/PIXEL
- */
-
-// AJOUTEZ CETTE SECTION À LA FIN DU FICHIER (avant la dernière accolade) :
-/**
- * MODULE : DIAGRAM_ENGINE v1.0
- * @description Générateur de diagrammes de flux et d'architecture en ASCII pur.
- * @part_of CORE_SYSTEM_CVNU
- */
-const DiagramEngine = {
-    /**
-     * Génère un diagramme de flux linéaire
-     * @param {string} input - Format: "Etape1 -> Etape2 -> Etape3"
-     */
-    generateFlow(input) {
-        const steps = input.split('->').map(s => s.trim());
-        let output = [];
-        
-        steps.forEach((step, index) => {
-            const boxWidth = step.length + 4;
-            output.push("  ┌" + "─".repeat(boxWidth) + "┐");
-            output.push(`  │  ${step}  │`);
-            output.push("  └" + "─".repeat(boxWidth) + "┘");
-            
-            if (index < steps.length - 1) {
-                output.push("        │");
-                output.push("        ▼");
-            }
-        });
-        
-        return output.join('\n');
-    },
-
-    /**
-     * Génère une vue d'architecture (Arborescence)
-     */
-    generateArch(root, components) {
-        let output = [`[🏢 ARCHITECTURE : ${root}]`, ""];
-        components.forEach((comp, index) => {
-            const isLast = index === components.length - 1;
-            const prefix = isLast ? "└── " : "├── ";
-            output.push(prefix + comp);
-        });
-        return output.join('\n');
-    },
-
-    /**
-     * Diagramme de Séquence (User <-> AI)
-     */
-    generateSequence(actors, steps) {
-        let header = actors.map(a => a.padEnd(15)).join('   ');
-        let divider = actors.map(() => "│".padEnd(15)).join('   ');
-        let output = [header, divider];
-
-        steps.forEach(step => {
-            const [from, to, label] = step.split('|');
-            const fromIdx = actors.indexOf(from.trim());
-            const toIdx = actors.indexOf(to.trim());
-            
-            let line = new Array(actors.length).fill("│              ");
-            if (fromIdx < toIdx) {
-                line[fromIdx] = "│  " + label.padEnd(10) + "  ──▶";
-            } else {
-                line[toIdx] = "│  ◀──  " + label.padEnd(10);
-            }
-            output.push(line.join(''));
-        });
-        
-        return output.join('\n');
-    }
-};
-// Initialisation globale
-/**
- * ════════════════════════════════════════════════════════════
- * MODULE GRAPHIQUE AVANCÉ : WARP ASCII & GEO-SPATIAL
- * Intègre Rasterizer, GeoEngine, et Pipeline de Rendu Hybride.
- * ════════════════════════════════════════════════════════════
- */
-
-/**
- * MOTEUR DE RENDU : PIXEL TO ASCII (RASTERIZER 8-BIT)
- * Gère la conversion Matrice -> Glyphe, la densité et les Shaders.
- */
-class AsciiRasterizer {
-    constructor() {
-        this.ramps = {
-            BIT_1: [' ', '█'],
-            BIT_4: [' ', '░', '▒', '▓', '█'],
-            BIT_8: [' ', '.', ':', '-', '=', '+', '*', '#', '%', '@'],
-            GEO:   [' ', '≈', '·', '▓', '▲'], // Eau, Plaine, Forêt, Montagne
-            WATER: [' ', '·', '~', '≈', '≋']
-        };
-
-        this.fragmentShaders = {
-            TERRAIN: (luma) => {
-                if (luma < 75)  return { char: '≈', color: 'BLUE' };   // Eau profonde
-                if (luma < 95)  return { char: '░', color: 'CYAN' };   // Eau côtière
-                if (luma < 120) return { char: '·', color: 'YELLOW' }; // Sable
-                if (luma < 170) return { char: '▒', color: 'GREEN' };  // Plaine
-                if (luma < 215) return { char: '▓', color: 'GREEN' };  // Forêt
-                return { char: '▲', color: 'WHITE' };                  // Montagne/Neige
-            },
-            GMT_ZONE: (frag) => {
-                // Shader pour la carte GMT : Terre/Mer + Fuseaux horaires
-                if (!frag.isLand) return { char: ' ', color: 'BLUE' }; // Mer
-                
-                // Coloration des continents selon le fuseau horaire (simulé)
-                if (frag.tz === 0) return { char: '█', color: 'GREEN' }; // Fuseau local (Bavent)
-                if (frag.tz < 0)   return { char: '▒', color: 'CYAN' };  // Ouest
-                return { char: '░', color: 'ORANGE' };                   // Est
-            },
-            WARP_DRIVE: (val) => {
-                // Effet visuel "Warp Speed" pour les chargements
-                const chars = ['·', ':', '|', '║', '█'];
-                const idx = Math.floor((val / 255) * (chars.length - 1));
-                const color = val > 200 ? 'WHITE' : (val > 100 ? 'CYAN' : 'BLUE');
-                return { char: chars[idx], color: color };
-            }
-        };
-    }
-
-    /**
-     * Pipeline de rendu (Simule le glDrawArrays)
-     */
-    draw(width = 64, height = 20, zoom = 1, shaderType = 'TERRAIN') {
-        const buffer = this.generateProceduralBuffer(width, height, zoom);
-        const shader = this.fragmentShaders[shaderType] || this.fragmentShaders.TERRAIN;
-        
-        return buffer.map((row, y) => {
-            let line = "";
-            row.forEach((val, x) => {
-                // Préparation des données pour le shader
-                // Pour GMT_ZONE, on simule des données supplémentaires (isLand, tz)
-                // Dans une version complète, ces données viendraient d'un Vertex Shader
-                const fragData = (shaderType === 'GMT_ZONE') 
-                    ? { isLand: val > 100, tz: Math.floor((x - width/2) / 4) } 
-                    : val;
-
-                const frag = shader(fragData);
-                
-                // Injection de la couleur via le système central
-                if (typeof system !== 'undefined' && system.colorize) {
-                    line += system.colorize(frag.char, frag.color);
-                } else {
-                    line += frag.char;
-                }
-            });
-            return line;
-        });
-    }
-
-    /**
-     * Génère un buffer de bruit procédural (Simplex Noise simplifié)
-     */
-    generateProceduralBuffer(width, height, zoom = 1) {
-        const buffer = [];
-        for (let y = 0; y < height; y++) {
-            const row = [];
-            for (let x = 0; x < width; x++) {
-                const freq = 0.1 / zoom;
-                // Bruit mathématique 8-bit (0-255)
-                const noise = (Math.sin(x * freq) + Math.cos(y * freq * 1.5)) * 127 + 128;
-                row.push(Math.floor(noise));
-            }
-            buffer.push(row);
-        }
-        return buffer;
-    }
-}
-
-/**
- * MOTEUR CARTOGRAPHIQUE ASCII (GEO-SPATIAL)
- * Gère le rendu "Planétaire -> Local" et le Zoom.
- */
-class AsciiGeoEngine {
-    constructor() {
-        this.rasterizer = new AsciiRasterizer();
-        this.resolution = { x: 64, y: 24 }; // Résolution cible pour terminal standard
-        this.center = { lat: 49.2, lon: -0.2 }; // Bavent, Normandie
-        
-        // Configuration de l'affichage
-        this.config = {
-            zoom: 1,       // 1 = Monde, 5 = Région, 10 = Local
-            mode: 'GEO',   // GEO, BIT_8, HEATMAP
-            shader: 'TERRAIN',
-            showGrid: true
-        };
-    }
-
-    /**
-     * Change le niveau de zoom
-     * @param {string} direction 'IN' | 'OUT'
-     */
-    setZoom(direction) {
-        if (direction === 'IN') this.config.zoom = Math.min(this.config.zoom * 2, 20);
-        if (direction === 'OUT') this.config.zoom = Math.max(this.config.zoom / 2, 1);
-        return this.config.zoom;
-    }
-
-    render() {
-        const width = this.resolution.x;
-        
-        // 1. Génération du buffer 8-BIT colorisé
-        const frameBuffer = this.rasterizer.draw(
-            this.resolution.x, 
-            this.resolution.y, 
-            this.config.zoom,
-            this.config.shader
-        );
-
-        // 2. Construction des bordures "Warp" (Style Double)
-        const b = KERNEL.ASCII_DICT.TENSOR.BORDERS.DOUBLE || {0:'╔', 1:'╗', 2:'╚', 3:'╝', 4:'═', 5:'║'};
-        const top    = b[0] + b[4].repeat(width) + b[1];
-        const bottom = b[2] + b[4].repeat(width) + b[3];
-        
-        // 3. Assemblage avec les bords latéraux
-        const framedMap = frameBuffer.map(line => `${b[5]}${line}${b[5]}`);
-
-        // 4. Ajout Overlay UI (Coordonnées, Zoom)
-        const uiLine = `[ 📍 LAT: ${this.center.lat} | LON: ${this.center.lon} | ZOOM: x${this.config.zoom} ]`;
-        const centeredUI = uiLine.padStart((width + uiLine.length)/2).padEnd(width);
-
-        // 5. Retour du bloc complet
-        return system.wrapASCII ? system.wrapASCII("TACTICAL GEO MAP", [
-            ...framedMap,
-            " ".repeat(width),
-            centeredUI
-        ].join('\n')) : [top, ...framedMap, bottom].join('\n');
-    }
-}
-
-/**
- * GENERATEUR DE CARTE STATIQUE (Stage 01: Input Assembler)
- * Pour éviter les risques I/O et fournir une carte de base fiable.
+ * GENERATEUR DE CARTE STATIQUE (Stage 01: IA - Input Assembler)
+ * Remplace CVNU_GraphicPipeline.assembleInputFromImage pour éviter les risques I/O.
  */
 const GMT_StaticGenerator = {
-    // Schéma simplifié de la carte GMT (64x20)
-    // 0 = Eau, 1 = Terre, 2 = Méridien 0, 3 = POI (Bavent)
+    // Schéma simplifié de la carte GMT (64x20 pour le terminal)
+    // 0 = Eau, 1 = Terre, 2 = Méridien 0
     getMatrix() {
         const matrix = Array.from({ length: 20 }, () => new Array(64).fill(0));
         
-        // Simulation des masses continentales (Coordonnées approximatives)
+        // Simulation des masses continentales (Coordonnées simplifiées)
         for (let y = 0; y < 20; y++) {
             for (let x = 0; x < 64; x++) {
                 // Axe GMT (Méridien 0) au centre (x = 32)
                 if (x === 32) matrix[y][x] = 2;
                 
                 // Amériques (Gauche)
-                if (x > 4 && x < 18 && y > 3 && y < 16) matrix[y][x] = 1;
+                if (x > 5 && x < 20 && y > 3 && y < 15) matrix[y][x] = 1;
                 // Eurasie / Afrique (Centre)
-                if (x > 28 && x < 48 && y > 2 && y < 18) matrix[y][x] = 1;
+                if (x > 30 && x < 50 && y > 2 && y < 17) matrix[y][x] = 1;
                 // Australie (Bas Droite)
-                if (x > 50 && x < 58 && y > 14 && y < 18) matrix[y][x] = 1;
-                
-                // POI Bavent (Approx x=32, y=6)
-                if (x === 32 && y === 6) matrix[y][x] = 3;
+                if (x > 52 && x < 60 && y > 14 && y < 18) matrix[y][x] = 1;
             }
         }
         return matrix;
     },
 
     /**
-     * Rendu ASCII statique rapide
+     * Stage 06: Fragment Shader intégré
+     * Convertit la matrice en ASCII colorisé.
      */
     toASCII() {
         const data = this.getMatrix();
-        let output = [];
+        const b = KERNEL.ASCII_DICT.TENSOR.BORDERS.DOUBLE;
+        let output = `┌${"─".repeat(64)}┐\n`;
 
-        data.forEach((row) => {
-            let line = "";
-            row.forEach((cell) => {
-                if (cell === 3) line += system.colorize('⊕', 'RED');        // POI
-                else if (cell === 2) line += system.colorize('│', 'VIOLET'); // GMT
-                else if (cell === 1) line += system.colorize('▒', 'GREEN');  // Terre
-                else line += system.colorize('·', 'BLUE');                   // Mer
+        data.forEach((row, y) => {
+            let line = "│";
+            row.forEach((cell, x) => {
+                if (cell === 2) line += system.colorize('║', 'VIOLET'); // GMT Line
+                else if (cell === 1) {
+                    // Si on est sur Bavent (x32, y8 approximatif sur 20 lignes)
+                    if (x === 32 && y === 5) line += system.colorize('⊕', 'RED');
+                    else line += system.colorize('▒', 'GREEN');
+                }
+                else line += " ";
             });
-            output.push(line);
+            output += line + "│\n";
         });
 
-        return output.join('\n');
+        output += `└${"─".repeat(64)}┘\n`;
+        output += `[ GMT-0: BAVENT_SYNC | MODE: STATIC_PIXELMAP ]`;
+        return output;
     }
-};
-
-/**
- * CVNU_GRAPHIC_PIPELINE (Manager Global)
- * Point d'entrée pour les rendus complexes.
+};/**
+ * CVNU_GRAPHIC_PIPELINE
+ * Architecture standardisée Stage-by-Stage pour rendu hybride ASCII/PIXEL
  */
-const GraphicPipeline = {
-    renderMap(type = 'PROCEDURAL') {
-        if (type === 'STATIC' || type === 'GMT') {
-            return system.wrapASCII("GLOBAL MAP (STATIC)", GMT_StaticGenerator.toASCII());
-        } else {
-            const engine = new AsciiGeoEngine();
-            // On peut configurer l'engine ici si besoin
-            return engine.render();
-        }
+class GraphicPipeline {
+    constructor(width = 64, height = 32) {
+        this.res = { w: width, h: height };
+        this.vBuffer = []; // Vertex/Luma Buffer (Données brutes)
+        this.fBuffer = []; // Fragment Buffer (Données colorisées)
     }
-};
+
+    // --- STAGE 01: INPUT ASSEMBLER ---
+    // Récupère la matrice GMT statique ou le bruit procédural
+    inputAssembler(source = 'GMT_STATIC') {
+        if (source === 'GMT_STATIC') {
+            this.vBuffer = GMT_StaticGenerator.getMatrix();
+        } else {
+            // Fallback sur le bruit de l'ancien rasterizer
+            const r = new AsciiRasterizer();
+            this.vBuffer = r.generateProceduralBuffer(this.res.w, this.res.h);
+        }
+        return this;
+    }
+
+    // --- STAGE 02: VERTEX SHADER ---
+    // Gère les transformations (Zoom, Pan) sur la matrice brute
+    vertexShader(zoom = 1) {
+        if (zoom === 1) return this;
+        // Simule une mise à l'échelle des données
+        this.vBuffer = this.vBuffer.map(row => 
+            row.map(luma => Math.min(255, luma * zoom))
+        );
+        return this;
+    }
+
+    // --- STAGE 04: GEOMETRY SHADER ---
+    // Injecte des points d'intérêt (POI) ou des entités
+    geometryShader() {
+        const user = KERNEL.STATE.USER_CVNU;
+        // Injection de Bavent (Méridien 0, ligne 5)
+        if (this.vBuffer[5] && this.vBuffer[5][32] !== undefined) {
+            this.vBuffer[5][32] = 999; // Code spécial pour POI
+        }
+        return this;
+    }
+
+    // --- STAGE 05 & 06: RASTERIZER & FRAGMENT SHADER ---
+    // Transforme la Luma en Fragment (Char + Color)
+    fragmentShader(template = 'GMT_ZONE') {
+        const shader = system.AsciiRasterizer.fragmentShaders[template];
+        
+        this.fBuffer = this.vBuffer.map((row, y) => {
+            return row.map((val, x) => {
+                // Cas spécial POI injecté au Stage 04
+                if (val === 999) return { char: '⊕', color: 'VIOLET' };
+
+                // Calcul des données de fragment pour le shader
+                const fragData = {
+                    luma: val,
+                    tz: Math.floor((x - 32) / 2.6), // Fuseau horaire
+                    isLand: val > 0 // Dans la carte statique, 0 = Mer
+                };
+                return shader(fragData);
+            });
+        });
+        return this;
+    }
+
+    // --- STAGE 07: OUTPUT MERGER ---
+    // Distribue le résultat vers les différentes sorties (Terminal & Canvas)
+    outputMerger() {
+        let asciiMatrix = "";
+        const canvas = document.getElementById('pixel-layer');
+        const ctx = canvas ? canvas.getContext('2d') : null;
+        const pSize = 8; // Taille du pixel sur le canvas
+
+        if (ctx) ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        this.fBuffer.forEach((row, y) => {
+            let line = "";
+            row.forEach((frag, x) => {
+                // 1. Assemblage ASCII
+                line += system.colorize(frag.char, frag.color);
+
+                // 2. Rendu Pixel (Canvas)
+                if (ctx) {
+                    ctx.fillStyle = this._colorToHex(frag.color);
+                    ctx.fillRect(x * pSize, y * pSize, pSize, pSize);
+                }
+            });
+            asciiMatrix += `║${line}║\n`;
+        });
+
+        // Encapsulation finale
+        return system.wrapASCII("TACTICAL GMT MAP", asciiMatrix);
+    }
+
+    // Utilitaire de conversion pour le Stage 07
+    _colorToHex(colorKey) {
+        const map = { 
+            VIOLET: '#8b5cf6', GREEN: '#22c55e', BLUE: '#3b82f6', 
+            ORANGE: '#f97316', WHITE: '#ffffff', YELLOW: '#eab308' 
+        };
+        return map[colorKey] || '#1a1a1a';
+    }
+}
+// AJOUTEZ CETTE SECTION À LA FIN DU FICHIER (avant la dernière accolade) :
+
+// Initialisation globale
+
 // Initialisation globale
 const CVNU_SYSTEM = {
     init: function() {
@@ -5311,12 +5174,10 @@ const CVNU_SYSTEM = {
         return system.handleCityCommand(args);
     }
 };
-
 // ============================================
 // EXPORT UNIFIÉ POUR TOUS LES ENVIRONNEMENTS
 // ============================================
 
-// Créer un objet d'export unique
 const CVNU_EXPORTS = {
     KERNEL: KERNEL,
     system: system,
@@ -5328,8 +5189,7 @@ const CVNU_EXPORTS = {
     CognitiveEngine: CognitiveEngine,
     PersistenceManager: PersistenceManager,
     MonetizationSync: MonetizationSync,
-    GovernanceDAO,
-    // Alias pour compatibilité (facultatif mais utile)
+    // Alias pour compatibilité
     STATE: KERNEL.STATE,
     coreCVNU: { 
         KERNEL, 
@@ -5337,42 +5197,30 @@ const CVNU_EXPORTS = {
         AsciiRasterizer, 
         AsciiGeoEngine, 
         CityBuilderManager, 
-        UrbanJob,
-        GovernanceDAO: GovernanceDAO 
+        UrbanJob 
     }
 };
 
-// 1. EXPORT NODE.JS (pour vos pages HTML côté serveur)
-if (typeof module !== 'undefined' && module.exports) {
-    module.exports = CVNU_EXPORTS;
-    KERNEL.STYLES.MODE = 'ANSI'; // Mode terminal
-    console.log("✅ CVNU Logic loaded in Terminal Mode (ANSI)");
-}
-export default CVNU_EXPORTS;
-// 2. EXPORT NAVIGATEUR (pour vos pages HTML côté client)
+// 1. COMPATIBILITÉ NAVIGATEUR (index.html)
 if (typeof window !== 'undefined') {
-    // Export global principal
     window.CVNU = CVNU_EXPORTS;
-    
-    // Alias pour compatibilité avec vos scripts existants
     window.KERNEL = KERNEL;
     window.system = system;
-    window.coreCVNU = CVNU_EXPORTS.coreCVNU;
     
-    // Initialisation automatique pour le navigateur
     if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', function() {
-            setTimeout(() => {
-                CVNU_SYSTEM.init();
-                console.log("✅ CVNU initialisé automatiquement dans le navigateur");
-            }, 100);
-        });
+        document.addEventListener('DOMContentLoaded', () => CVNU_SYSTEM.init());
     } else {
-        setTimeout(() => {
-            CVNU_SYSTEM.init();
-            console.log("✅ CVNU initialisé automatiquement dans le navigateur");
-        }, 100);
+        CVNU_SYSTEM.init();
     }
+}
+
+// 2. EXPORT POUR NODE.JS (ESM - serveur.js)
+// On utilise CVNU_EXPORTS comme valeur par défaut
+export default CVNU_EXPORTS;
+
+// 3. EXPORT POUR NODE.JS (CommonJS - si nécessaire)
+if (typeof module !== 'undefined' && module.exports) {
+    module.exports = CVNU_EXPORTS;
 }
 
 // ============================================
